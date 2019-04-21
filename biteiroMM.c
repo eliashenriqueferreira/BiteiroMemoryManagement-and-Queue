@@ -1,4 +1,5 @@
 #define BITEIRO_MM_C
+#include <biteiroCommons.h>
 #include <biteiroMM.h>
 
 bitMM *pmm_last = NULL;
@@ -17,7 +18,7 @@ bitMM *bitMM_ctor()
 	pmm_first->bufLen = sts_len;
 	pmm_first->pnext = NULL;
 	pmm_first->pprev = NULL;
-	pmm_first->status_key = BMM_ALLOC_KEY;
+	pmm_first->statusKey = BMM_ALLOC_KEY;
 
 	bitMMSTS *psts = (bitMMSTS *)((size_t)pmm_first + bit_len);
 
@@ -41,7 +42,7 @@ char *bitMM_alloc(size_t len)
 
 	assert(pp != NULL);
 
-	assert(pmm_last->status_key == BMM_ALLOC_KEY);
+	assert(pmm_last->statusKey == BMM_ALLOC_KEY);
 
 	assert(pmm_last->pbuff[pmm_last->bufLen] == BMM_ALLOC_TAIL);
 
@@ -49,7 +50,7 @@ char *bitMM_alloc(size_t len)
 	pp->pbuff = (char *)((size_t)pp + bit_len);
 	pp->pnext = NULL;
 	pp->pprev = pmm_last;
-	pp->status_key = BMM_ALLOC_KEY;
+	pp->statusKey = BMM_ALLOC_KEY;
 	pp->bufLen = len;
 	pp->pbuff[pp->bufLen] = BMM_ALLOC_TAIL;
 
@@ -63,7 +64,7 @@ char *bitMM_alloc(size_t len)
 	return pp->pbuff;
 }
 
-int bitMM_free(char *pbuf)
+int bitMM_free(void *pbuf)
 {
 	size_t bit_len = sizeof(struct st_bitMM);
 
@@ -74,7 +75,7 @@ int bitMM_free(char *pbuf)
 
 	pm = (bitMM *)((size_t)pbuf - bit_len);
 
-	assert(pm->status_key == BMM_ALLOC_KEY);
+	assert(pm->statusKey == BMM_ALLOC_KEY);
 
 	assert(pm->pbuff[pm->bufLen] == BMM_ALLOC_TAIL);
 
@@ -117,7 +118,7 @@ int bitMM_dest(bitMM *p_pmm)
 		bitMM *pp = paux;
 		paux = pp->pnext;
 
-		assert(pp->status_key == BMM_ALLOC_KEY);
+		assert(pp->statusKey == BMM_ALLOC_KEY);
 
 		assert(pp->pbuff[pp->bufLen] == BMM_ALLOC_TAIL);
 
@@ -127,7 +128,7 @@ int bitMM_dest(bitMM *p_pmm)
 
 	} 
 
-	assert(pmm_first->status_key == BMM_ALLOC_KEY);
+	assert(pmm_first->statusKey == BMM_ALLOC_KEY);
 
 	deallocs++;
 
@@ -138,6 +139,8 @@ int bitMM_dest(bitMM *p_pmm)
 
 void bitMM_printStatus(bitMM *pm)
 {
+//	printf(" O Tamanho do bool em c eh %zd\n", sizeof(bool));
+
 	bitMMSTS *ps = (bitMMSTS *)pm->pbuff;
 
 	printf("\n Allocs: %zd - Frees: %zd - Total Memory : %zd", ps->allocs, ps->frees, ps->total_mem);
