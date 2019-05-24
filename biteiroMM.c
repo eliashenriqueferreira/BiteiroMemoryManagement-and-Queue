@@ -34,6 +34,29 @@ bitMM *bitMM_ctor()
 	return pmm_first;
 }
 
+bitMM *bitMM_checkAll(bool bcrash)
+{
+	bitMM *pbit = pmm_first;
+
+	while (pbit != NULL)
+	{
+		if ((pbit->statusKey == BMM_ALLOC_KEY) && (pbit->pbuff[pbit->bufLen] == BMM_ALLOC_TAIL))
+		{
+			pbit = pbit->pnext;
+		}
+		else
+		{
+			if (bcrash) 
+			{
+				printf("ERRO ERRO ERRO!!!");
+				assert(0);
+			}
+			return pbit;
+		}
+	}
+	return NULL;
+}
+
 char *bitMM_alloc(size_t len)
 {
 	size_t bit_len = sizeof(struct st_bitMM);

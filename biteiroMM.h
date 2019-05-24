@@ -11,9 +11,6 @@ typedef struct st_bitMM {
 	struct st_bitMM *pnext;
 	struct st_bitMM *pprev;
 	char statusKey;
-	size_t indxHead;
-	size_t indxTail;
-	size_t bufCt;		// This is the quantity of itens self managed by insert and remove functions.
 	size_t bufLen;		// This is the lenght capacity defined in allocs
 	char *pbuff;
 } bitMM;
@@ -34,6 +31,7 @@ typedef struct st_bitMM_Statistics {
 #endif
 
 EXTERN bitMM *bitMM_ctor();
+EXTERN bitMM *bitMM_checkAll(bool bcrash);
 EXTERN char *bitMM_alloc(size_t len);
 EXTERN int bitMM_free(void *);
 EXTERN bitMM *bitMM_ctor();
